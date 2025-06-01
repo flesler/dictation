@@ -41,7 +41,7 @@ def process(text):
     prev_token = token
     token = ''.join(c for c in part.lower() if c.isalnum())
 
-    print('part', part, 'token', token, 'prev_token', prev_token)
+    # print('part', part, 'token', token)
     # Don't treat as key if in the middle of a sentence
     can_be_key = controller.is_always_key(token) or modifiers or (not buffer and len(token) > 1)
 
@@ -72,8 +72,6 @@ def process(text):
         continue
 
     # (repeat) X times
-
-    print('last_hotkey', last_hotkey, 'token', token, 'peek', stream.peek())
     if last_hotkey and token == 'times' and prev_token and prev_token.isdigit():
       buffer.pop()
       num = int(prev_token)
@@ -99,5 +97,5 @@ def process(text):
 
 def flush(text):
   if text:
-    controller.type("".join(text))
+    controller.type_spanish(text)
     text.clear()

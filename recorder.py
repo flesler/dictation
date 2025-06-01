@@ -18,8 +18,9 @@ if __name__ == '__main__':
   device_index = get_audio_device_index()
   # print("Wait until it says 'speak now'")
   lang = 'en' # es # ""
+  size = "tiny" # "small"
   with AudioToTextRecorder(
-    model="tiny.en" if lang == "en" else "tiny", # small.en
+    model=f"{size}.en" if lang == "en" else size, # small.en
     language=lang, # "" is Auto
     compute_type="int8_float16",
     input_device_index=device_index,
