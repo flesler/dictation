@@ -53,7 +53,7 @@ MAPPING = {
   # "new line": "\n",
   # Bad pronunciation:
   "workspace": "backspace",
-  "countour": "control",
+  "contour": "control",
   # Add more mappings to fix case or skip filler words
   "usa": "USA",
   "u s a": "USA",
