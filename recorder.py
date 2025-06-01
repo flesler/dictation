@@ -4,6 +4,7 @@ import os
 import sys
 from devices import get_audio_device_index
 import runner
+import subprocess
 
 def process_text(text):
   runner.process(text)
@@ -14,6 +15,8 @@ def process_text(text):
 if __name__ == '__main__':
   # Cache in this directory
   os.environ["HF_HOME"] = os.path.abspath("./downloads")
+  # Ensure microphone is unmuted
+  subprocess.run(['amixer', 'cset', 'numid=7', '1'], stdout=subprocess.DEVNULL)
 
   device_index = get_audio_device_index()
   # print("Wait until it says 'speak now'")
