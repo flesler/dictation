@@ -26,9 +26,11 @@ if __name__ == '__main__':
     spinner=False, # Default True
     no_log_file=True,
     start_callback_in_new_thread=True,
-    enable_realtime_transcription=False, # Default
+    enable_realtime_transcription=False, # False, # Default
+    realtime_processing_pause=0.1, # Default 0.2
     use_main_model_for_realtime=True, # Change
-    min_gap_between_recordings=0.1, # Default 1
+    min_gap_between_recordings=0.0, # Default 1
+    min_length_of_recording=0.0, # Default 1
     wake_words=None,
   ) as recorder:
     print('Ready')
