@@ -29,13 +29,19 @@ callbacks = {
 
 is_running = True
 last_hotkey = None
+first_sentence = True
 
 def process(text):
-  global last_hotkey
+  global last_hotkey, first_sentence
   stream = Stream(mapper.map(text))
   buffer = []
   modifiers = []
   token = None
+
+  if first_sentence:
+    first_sentence = False
+  else:
+    buffer.append(" ")
 
   while stream.has():
     part = stream.next()
