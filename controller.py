@@ -13,7 +13,7 @@ def is_modifier(key):
   return key in modifier_keys
 
 def is_key(key):
-  return key in pyautogui.KEYBOARD_KEYS
+  return key in pyautogui.KEYBOARD_KEYS or key in reverse_map
 
 def is_always_key(key):
   return key in always_keys
@@ -23,6 +23,7 @@ def hotkey(modifiers, key):
   modifiers[:] = [w for w in modifiers if w]
   # return print('hotkey', modifiers, key)
   all_keys = [modifier_keys[m] for m in modifiers]
+  key = reverse_map.get(key, key)
   all_keys.append(key)
   pyautogui.hotkey(*all_keys)
 
@@ -66,10 +67,15 @@ modifier_keys = {
   "press": "",
 }
 
+reverse_map = {
+  "\n": "enter",
+  "\t": "tab",
+}
 
 # These don't need a modifier or "press" before them, to be used as keys instead of text
 always_keys = {
   "tab", "slash", "backspace", "esc", "pageup", "pagedown", "printscreen", "volumeup", "volumedown", "volumemute", "win",
+  "exit"
 }
 
 # print(pyautogui.KEYBOARD_KEYS)

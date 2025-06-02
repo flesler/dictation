@@ -37,7 +37,7 @@ MAPPING = {
   "plus": "+",
   "asterisk": "*",
   "percent": "%",
-  "at": "@",
+  # "at": "@",
   "hash": "#",
   "pound": "#",
   "ampersand": "&",
@@ -51,11 +51,12 @@ MAPPING = {
   # Whitespace:
   # "space": " ",
   # "tab": "\t",
-  # "enter": "\n",
+  "enter": "\n",
   # "new line": "\n",
   # Bad pronunciation:
-  # "ando": "undo",
-  # "do it": "repeat",
+  "ando": "undo",
+  "dush": "dash",
+  "dese": "these",
   "wax base": "backspace",
   "black space": "backspace",
   "clicked": "click",
@@ -65,6 +66,11 @@ MAPPING = {
   "control set": "control z",
   "workspace": "backspace",
   "contour": "control",
+  # "do it": "repeat",
+  "gtfo": "exit",
+  "x it": "exit",
+  "ext it": "exit",
+  "our table": "Airtable",
   # Numbers
   "zero": "0",
   "one": "1",
@@ -79,7 +85,6 @@ MAPPING = {
   "ten": "10",
   "eleven": "11",
   "twelve": "12",
-  # TODO: Remove spaces between numbers?
   # Shortcuts
   # "save": "control s",
   # "paste": "control v",
@@ -101,36 +106,38 @@ MAPPING = {
   "volume down": "volumedown",
   "volume mute": "volumemute",
   "mute": "volumemute",
+  "ship it": "shipit",
   # Filler words to skip
   "uh": "",
   "er": "",
   "ah": "",
   "huh": "",
   "hm": "",
+  "hmm": "",
   "um": "",
-  # Final polish
-  "  ": " ",
-  " .": ".",
-  " ,": ",",
-  " :": ":",
-  " ;": ";",
-  r"\r": r"\n",
-  r"\n ": r"\n",
-  r" \n": r"\n",
 }
 
 REGEX = re.compile(r"\b(" + "|".join(re.escape(k) for k in MAPPING) + r")\b", re.IGNORECASE)
+# print(REGEX.pattern)
 
 def map(text):
   prev = None
   while prev != text:
     prev = text
     text = REGEX.sub(lambda x: map_word(x.group(1)), text)
+
+  # Remove spaces before some chars
+  text = re.sub(r' +([\t\n ,.:])', r'\1', text)
+  # Remove spaces after some chars
+  text = re.sub(r'([\n]) +', r'\1', text)
+  # Remove spaces between contiguous numbers
+  text = re.sub(r'(?<=\d)[ ,-]+(?=\d)', '', text)
   return tokenize(text)
 
 def map_word(orig):
   key = orig.lower()
   repl = MAPPING[key]
+  print('map_word', orig, '->', repl)
   if orig and orig[0].isupper():
     return repl.capitalize()
   return repl
@@ -138,4 +145,4 @@ def map_word(orig):
 # Convert "Hello! how are you?" -> ["Hello", "! ", "how", " ", "are", " ", "you", "?"]
 def tokenize(text):
   # This will match words or punctuation, possibly followed by spaces, commas, or periods
-  return re.findall(r'\w+[ ,\.]*|[^\w\s,\.]+[ ,\.]*', text)
+  return re.findall(r'\w+[ ,\.]*|[\n\t]|[^\w\s,\.]+[ ,\.]*', text)
