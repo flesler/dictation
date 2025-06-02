@@ -4,6 +4,12 @@ import microphone
 import os
 import sys
 import psutil
+import argparse
+
+def process(text):
+  runner.process(text)
+  if args.single:
+    stop()
 
 def check_another():
   current_pid = os.getpid()
@@ -29,15 +35,15 @@ def check_another():
 
 # TODO: Bind to shortcut
 
-def start(lang=None):
+def start():
   # Cache in this directory
   os.environ["HF_HOME"] = os.path.abspath("./downloads")
   # Ensure microphone is unmuted
   microphone.start()
 
-  recorder.start(lang)
+  recorder.start(args.lang)
   print('Ready')
-  recorder.monitor(runner.process)
+  recorder.monitor(process)
 
 def stop(exit=True):
   recorder.stop()
@@ -46,9 +52,10 @@ def stop(exit=True):
     sys.exit(0)
 
 if __name__ == '__main__':
-  # If another python with recorder.py is running, kill it and exit this
+  # If another python with index.py is running, kill it and exit this
   check_another()
-  lang = None
-  if len(sys.argv) > 1:
-    lang = sys.argv[1]
-  start(lang)
+  parser = argparse.ArgumentParser(description="Start the voice recorder")
+  parser.add_argument('--lang', type=str, default='en', help='Language code (e.g., en, es)')
+  parser.add_argument('--single', action='store_true', help='If set, exits after one dictation')
+  args = parser.parse_args()
+  start()
