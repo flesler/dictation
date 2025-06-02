@@ -3,6 +3,7 @@ from stream import Stream
 import controller
 import os
 import index
+import time
 
 def resume():
   global is_running
@@ -16,6 +17,11 @@ def repeat_hotkey():
   global last_hotkey
   controller.hotkey(*last_hotkey)
 
+def submit():
+  controller.hotkey([], "enter")
+  time.sleep(0.05)
+  index.stop()
+
 callbacks = {
   "click": controller.click,
   "rightclick": controller.right_click,
@@ -25,23 +31,20 @@ callbacks = {
   # "undo": lambda: controller.hotkey(["control"], "z"),
   # "redo": lambda: controller.hotkey(["control"], "y"),
   "exit": lambda: index.stop(),
+  "shipit": submit,
 }
 
 is_running = True
 last_hotkey = None
-first_sentence = True
+last_char = None
 
 def process(text):
-  global last_hotkey, first_sentence
+  global last_hotkey
+
   stream = Stream(mapper.map(text))
   buffer = []
   modifiers = []
   token = None
-
-  if first_sentence:
-    first_sentence = False
-  else:
-    buffer.append(" ")
 
   while stream.has():
     part = stream.next()
@@ -49,10 +52,7 @@ def process(text):
     token = ''.join(c for c in part.lower() if c.isalnum())
 
     # print('part', part, 'token', token)
-    # Don't treat as key if in the middle of a sentence
-    can_be_key = controller.is_always_key(token) or modifiers or (not buffer and len(token) > 1)
-
-    if can_be_key and token in callbacks and (is_running or token == "resume"):
+    if token in callbacks and (is_running or token == "resume"):
       flush(buffer)
       callbacks[token]()
       continue
@@ -69,23 +69,18 @@ def process(text):
       modifiers.append(token)
       continue
 
-    if not modifiers:
-      # TODO: Make fancier, avoid flushing, turn to a character
-      if token == 'enter':
-        buffer.append('\n')
-        continue
-      if token == 'tab':
-        buffer.append('\t')
-        continue
-
     # (repeat) X times
     if last_hotkey and token == 'times' and prev_token and prev_token.isdigit():
-      buffer.pop()
       num = int(prev_token)
-      for _ in range(num):
-        repeat_hotkey()
-      continue
+      # Don't risk a coloquialism like "1000 times"
+      if num < 20:
+        buffer.pop()
+        for _ in range(num):
+          repeat_hotkey()
+        continue
 
+    # Don't treat as key if in the middle of a sentence
+    can_be_key = controller.is_always_key(token) or modifiers or (not buffer and len(token) > 1)
     if can_be_key and controller.is_key(token):
       flush(buffer)
       last_hotkey = (modifiers.copy(), token)
@@ -100,9 +95,21 @@ def process(text):
 
     buffer.append(part)
   
-  flush(buffer)
+  return flush(buffer)
 
 def flush(text):
-  if text:
-    controller.type_spanish(text)
-    text.clear()
+  global last_char
+  # print('flush', text, 'last_char "', last_char, '"')
+  if not text:
+    return
+  if last_char and not is_space(last_char) and not is_space(text[0][0]):
+    text.insert(0, " ")
+  last_char = text[-1][-1]
+
+  # TODO: Don't use if lang=en
+  controller.type_spanish(text)
+  text.clear()
+  return text
+
+def is_space(char):
+  return char == " " or char == "\n"
