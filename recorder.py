@@ -1,16 +1,15 @@
 from RealtimeSTT import AudioToTextRecorder
 import runner
 import microphone
+import system
 
 recorder = None
 
-def start(opts=None):
+def start():
   global recorder
-  # Convert Namespace to dict if needed
-  opts = vars(opts or {})
-  lang = opts.get('lang', 'en')
-  size = opts.get('size', 'tiny')
-  polish = opts.get('polish', False)
+  lang = system.args.lang or 'en'
+  polish = system.args.polish or False
+  size = 'tiny'
   print(f"Starting recorder with lang: {lang}, size: {size}, polish: {polish}")
   recorder = AudioToTextRecorder(
     model=f"{size}.en" if lang == "en" else size, # small.en

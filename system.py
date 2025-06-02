@@ -5,6 +5,8 @@ import argparse
 import signal
 import subprocess
 
+args = None
+
 def kill_another(sig = signal.SIGTERM):
   current_pid = os.getpid()
   script_name = 'index.py'
@@ -32,8 +34,9 @@ def on(sig, handler):
   signal.signal(sig, handler)
 
 def parse_args():
+  global args
   parser = argparse.ArgumentParser(description="Start the voice recorder")
   parser.add_argument('--lang', type=str, default='en', help='Language code (e.g., en, es)')
   parser.add_argument('--single', action='store_true', help='If set, exits after one dictation')
   parser.add_argument('--polish', action='store_true', help='If set, sentences get punctuation and title case')
-  return parser.parse_args()
+  args = parser.parse_args()
