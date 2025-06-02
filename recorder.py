@@ -1,32 +1,16 @@
 from RealtimeSTT import AudioToTextRecorder
-import pyautogui
-import os
-import sys
-from devices import get_audio_device_index
 import runner
-import subprocess
+import microphone
 
-def process_text(text):
-  runner.process(text)
-  # pyautogui.typewrite(text + " ")
-  # print(text, file=sys.stderr)
-  # print(text)
+recorder = None
 
-if __name__ == '__main__':
-  # Cache in this directory
-  os.environ["HF_HOME"] = os.path.abspath("./downloads")
-  # Ensure microphone is unmuted
-  subprocess.run(['amixer', 'cset', 'numid=7', '1'], stdout=subprocess.DEVNULL)
-
-  device_index = get_audio_device_index()
-  # print("Wait until it says 'speak now'")
-  lang = 'en' # es # ""
-  size = "tiny" # "small"
-  with AudioToTextRecorder(
+def start(lang='en', size='tiny'):
+  global recorder
+  recorder = AudioToTextRecorder(
     model=f"{size}.en" if lang == "en" else size, # small.en
     language=lang, # "" is Auto
     compute_type="int8_float16",
-    input_device_index=device_index,
+    input_device_index=microphone.get_device_index(),
     spinner=False, # Default True
     no_log_file=True,
     start_callback_in_new_thread=True,
@@ -36,8 +20,16 @@ if __name__ == '__main__':
     min_gap_between_recordings=0.0, # Default 1
     min_length_of_recording=0.0, # Default 1
     wake_words=None,
-  ) as recorder:
-    print('Ready')
-    while True:
-      recorder.text(process_text)
-  # recorder.shutdown()
+  )
+
+def stop():
+  global recorder
+  recorder.shutdown()
+  recorder = None
+
+def monitor(callback):
+  while is_running():
+    recorder.text(callback)
+
+def is_running():
+  return recorder is not None

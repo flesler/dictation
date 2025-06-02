@@ -2,6 +2,7 @@ import mapper
 from stream import Stream
 import controller
 import os
+import index
 
 def resume():
   global is_running
@@ -23,7 +24,7 @@ callbacks = {
   "repeat": repeat_hotkey,
   # "undo": lambda: controller.hotkey(["control"], "z"),
   # "redo": lambda: controller.hotkey(["control"], "y"),
-  "exit": lambda: sys.exit(0),
+  "exit": lambda: index.stop(),
 }
 
 is_running = True
