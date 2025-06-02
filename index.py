@@ -5,6 +5,7 @@ import os
 import sys
 import psutil
 import argparse
+import time
 
 def process(text):
   runner.process(text)
@@ -49,6 +50,7 @@ def stop(exit=True):
   recorder.stop()
   microphone.stop()
   if exit:
+    time.sleep(0.5)
     sys.exit(0)
 
 if __name__ == '__main__':

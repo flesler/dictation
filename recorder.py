@@ -23,6 +23,8 @@ def start(lang=None, size='tiny'):
     min_gap_between_recordings=0.0, # Default 1
     min_length_of_recording=0.0, # Default 1
     wake_words=None,
+    initial_prompt=prompt,
+    initial_prompt_realtime=prompt
   )
 
 def stop():
@@ -36,3 +38,9 @@ def monitor(callback):
 
 def is_running():
   return recorder is not None
+
+# Crafted by ChatGPT, not sure how much of a difference it makes
+prompt = """
+You will receive dictation that includes both regular text and spoken keyboard shortcuts or commands.
+Transcribe spoken shortcuts and commands exactly as you hear them, using words like "enter", "control a", "control alt v", "comma", "period", etc., so they can be mapped to their intended actions. 
+"""
