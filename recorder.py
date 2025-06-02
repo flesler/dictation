@@ -4,8 +4,11 @@ import microphone
 
 recorder = None
 
-def start(lang='en', size='tiny'):
+def start(lang=None, size='tiny'):
   global recorder
+  if lang == None:
+    lang = 'en'
+  print(f"Starting recorder with lang: {lang}, size: {size}")
   recorder = AudioToTextRecorder(
     model=f"{size}.en" if lang == "en" else size, # small.en
     language=lang, # "" is Auto

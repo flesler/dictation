@@ -1,5 +1,4 @@
 import runner
-import check_kill
 import recorder
 import microphone
 import os
@@ -30,13 +29,13 @@ def check_another():
 
 # TODO: Bind to shortcut
 
-def start():
+def start(lang=None):
   # Cache in this directory
   os.environ["HF_HOME"] = os.path.abspath("./downloads")
   # Ensure microphone is unmuted
   microphone.start()
 
-  recorder.start()
+  recorder.start(lang)
   print('Ready')
   recorder.monitor(runner.process)
 
@@ -49,4 +48,7 @@ def stop(exit=True):
 if __name__ == '__main__':
   # If another python with recorder.py is running, kill it and exit this
   check_another()
-  start()
+  lang = None
+  if len(sys.argv) > 1:
+    lang = sys.argv[1]
+  start(lang)
