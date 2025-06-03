@@ -10,3 +10,5 @@ def time_end(name = 'operation'):
   global start_time
   end_time = time.time()
   print(f"{name} took {end_time - start_time:.3f} seconds")
+  # Can chain
+  start_time = end_time

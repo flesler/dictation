@@ -9,12 +9,16 @@ def start():
   global recorder
   lang = system.args.lang or 'en'
   polish = system.args.polish or False
-  size = 'tiny'
-  print(f"Starting recorder with lang: {lang}, size: {size}, polish: {polish}")
+  size = 'base' # 'small' # 'tiny' # 'distil-large-v3' #
+  model = size
+  if lang == "en" and not '-' in size:
+    model = f"{size}.en"
+  print(f"Starting recorder with lang: {lang}, size: {size}, polish: {polish}, model: {model}")
   recorder = AudioToTextRecorder(
-    model=f"{size}.en" if lang == "en" else size, # small.en
-    language=lang, # "" is Auto
-    compute_type="int8_float16",
+    download_root=system.abs_path("./downloads"),
+    model=model,
+    language=lang, # None is Auto
+    compute_type="auto", # "int8_float16",
     input_device_index=microphone.get_device_index(),
     spinner=False, # Default True
     no_log_file=True,
@@ -32,11 +36,15 @@ def start():
     initial_prompt=prompt,
     initial_prompt_realtime=prompt,
     normalize_audio=True,
+    # silero_sensitivity=0.8,
+    # silero_use_onnx=True,
+    # silero_deactivity_detection=True,
   )
 
 def stop():
   global recorder
   if recorder:
+    # recorder.stop()
     recorder.shutdown()
   recorder = None
 
@@ -47,10 +55,15 @@ def monitor(callback):
     if text:
       text = callback(text) or text
       # Might help with short sub-sentences dictated slowly
-      recorder.initial_prompt += text
+      if recorder:
+        recorder.initial_prompt += text
 
 def is_running():
   return recorder is not None
+
+def text():
+  # Just for testing
+  return recorder.text()
 
 # Not an LLM prompt per se, it might help bias the model
 prompt = """You receive dictation that includes both regular text and spoken keyboard shortcuts or commands.

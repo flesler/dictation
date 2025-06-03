@@ -5,6 +5,7 @@ import microphone
 import os
 import sys
 import signal
+import util
 
 def process(text):
   text = runner.process(text)
@@ -13,13 +14,11 @@ def process(text):
   return text
 
 def start():
-  # Cache in this directory
-  os.environ["HF_HOME"] = os.path.abspath("./downloads")
   recorder.start()
   # Ensure microphone is unmuted
   microphone.start()
-  print('Ready')
   system.play('percussion-12')
+  util.time_end('Boot')
   recorder.monitor(process)
 
 def stop(force = False):
@@ -31,6 +30,7 @@ def stop(force = False):
     sys.exit(0)
 
 if __name__ == '__main__':
+  util.time_start()
   system.parse_args()
   if system.kill_another(signal.SIGTERM):
     sys.exit(0)

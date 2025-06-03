@@ -33,6 +33,9 @@ def play(file):
 def on(sig, handler):
   signal.signal(sig, handler)
 
+def abs_path(path):
+  return os.path.abspath(path)
+
 def parse_args():
   global args
   parser = argparse.ArgumentParser(description="Start the voice recorder")
