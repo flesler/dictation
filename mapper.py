@@ -52,7 +52,7 @@ MAPPING = {
   # "space": " ",
   # "tab": "\t",
   "enter": "\n",
-  # "new line": "\n",
+  "new line": "\n",
   # Bad pronunciation:
   "ando": "undo",
   "dush": "dash",
@@ -137,7 +137,7 @@ def map(text):
 def map_word(orig):
   key = orig.lower()
   repl = MAPPING[key]
-  print('map_word', orig, '->', repl)
+  # print('map_word', orig, '->', repl)
   if orig and orig[0].isupper():
     return repl.capitalize()
   return repl

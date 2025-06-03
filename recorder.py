@@ -9,7 +9,7 @@ def start():
   global recorder
   lang = system.args.lang or 'en'
   polish = system.args.polish or False
-  size = 'base' # 'small' # 'tiny' # 'distil-large-v3' #
+  size = 'small' # 'base' # 'tiny' # 'distil-large-v3' #
   model = size
   if lang == "en" and not '-' in size:
     model = f"{size}.en"
@@ -18,7 +18,7 @@ def start():
     download_root=system.abs_path("./downloads"),
     model=model,
     language=lang, # None is Auto
-    compute_type="auto", # "int8_float16",
+    compute_type="default", # "auto", # "int8_float16",
     input_device_index=microphone.get_device_index(),
     spinner=False, # Default True
     no_log_file=True,
@@ -26,19 +26,19 @@ def start():
     ensure_sentence_ends_with_period=polish,
     start_callback_in_new_thread=True,
     enable_realtime_transcription=False, # False, # Default
-    realtime_processing_pause=0.0, # Default 0.2
+    realtime_processing_pause=0.01, # Default 0.2
     use_main_model_for_realtime=True, # Change
-    min_gap_between_recordings=0.0, # Default 1
-    min_length_of_recording=0.0, # Default 1
+    min_gap_between_recordings=0.01, # Default 1
+    min_length_of_recording=0.01, # Default 1
     # This is key, flushes the buffer
     post_speech_silence_duration=0.2, # Default 0.2
     wake_words=None,
     initial_prompt=prompt,
     initial_prompt_realtime=prompt,
     normalize_audio=True,
-    # silero_sensitivity=0.8,
-    # silero_use_onnx=True,
-    # silero_deactivity_detection=True,
+    silero_sensitivity=0.8,
+    silero_use_onnx=True,
+    silero_deactivity_detection=True,
   )
 
 def stop():

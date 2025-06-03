@@ -106,8 +106,7 @@ def flush(text):
     text.insert(0, " ")
   last_char = text[-1][-1]
 
-  # TODO: Don't use if lang=en
-  controller.type_spanish(text)
+  controller.paste(text)
   text.clear()
   return text
 
