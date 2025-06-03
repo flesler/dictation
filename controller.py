@@ -63,6 +63,7 @@ reverse_map = {
 # These don't need a modifier or "press" before them, to be used as keys instead of text
 always_keys = {
   "tab", "slash", "backspace", "esc", "pageup", "pagedown", "printscreen", "volumeup", "volumedown", "volumemute", "win",
+  "f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "f10", "f11", "f12",
   "exit"
 }
 

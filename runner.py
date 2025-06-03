@@ -28,9 +28,8 @@ callbacks = {
   "suspend": suspend,
   "resume": resume,
   "repeat": repeat_hotkey,
-  # "undo": lambda: controller.hotkey(["control"], "z"),
-  # "redo": lambda: controller.hotkey(["control"], "y"),
   "exit": lambda: index.stop(),
+  "quit": lambda: index.stop(),
   "shipit": submit,
 }
 
