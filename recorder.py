@@ -7,15 +7,13 @@ recorder = None
 
 def start():
   global recorder
-  lang = system.args.lang or 'en'
-  polish = system.args.polish or False
-  size = 'small' # 'base' # 'tiny' # 'distil-large-v3' #
+  quant = args.quant
+  root = system.abs_path("./downloads")
   model = size
-  if lang == "en" and not '-' in size:
-    model = f"{size}.en"
-  print(f"Starting recorder with lang: {lang}, size: {size}, polish: {polish}, model: {model}")
+  if quant and quant != 'none':
+    model = f"{root}/{model}-{quant}"
   recorder = AudioToTextRecorder(
-    download_root=system.abs_path("./downloads"),
+    download_root=root,
     model=model,
     language=lang, # None is Auto
     compute_type="default", # "auto", # "int8_float16",

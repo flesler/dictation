@@ -39,7 +39,7 @@ def abs_path(path):
 def parse_args():
   global args
   parser = argparse.ArgumentParser(description="Start the voice recorder")
-  parser.add_argument('--lang', type=str, default='en', help='Language code (e.g., en, es)')
-  parser.add_argument('--single', action='store_true', help='If set, exits after one dictation')
+  parser.add_argument('--quant', type=str, default='int8', help='quant type',
+    choices=['none', 'int8', 'int16', 'float16', 'float32'])
   parser.add_argument('--polish', action='store_true', help='If set, sentences get punctuation and title case')
   args = parser.parse_args()
