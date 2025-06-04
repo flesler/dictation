@@ -4,6 +4,7 @@ import psutil
 import argparse
 import signal
 import subprocess
+import time
 from enum import Enum
 
 args = None
@@ -14,24 +15,35 @@ class Sounds(Enum):
   STOP = 'percussion-28'
   FATAL = 'cockchafer-gentleman-1'
 
+def kill_another(sig=signal.SIGTERM, attempts=3):
   current_pid = os.getpid()
   script_name = 'index.py'
+  killed = False
 
   for proc in psutil.process_iter(['pid', 'name', 'cmdline']):
     try:
-      if proc.info['pid'] == current_pid:
+      pid = proc.info['pid']
+      if pid == current_pid:
         continue
       cmdline = proc.info.get('cmdline') or []
       if (
         ('python' in (proc.info['name'] or '').lower() or any('python' in c for c in cmdline))
         and any(script_name in c for c in cmdline)
       ):
-        proc.send_signal(sig)
-        print("Killed another running index.py process.")
-        return True
+        killed = True
+        print(f"Sending SIGTERM to another process (pid={pid}).")
+        for _ in range(attempts):
+          proc.send_signal(sig)
+          time.sleep(0.3)
+          if not proc.is_running():
+            break
+          time.sleep(0.8)
+        if proc.is_running():
+          print(f"Process (pid={pid}) did not exit, sending SIGKILL.")
+          proc.send_signal(signal.SIGKILL)
     except (psutil.NoSuchProcess, psutil.AccessDenied):
       continue
-  return False
+  return killed
 
 def play(file):
   if isinstance(file, Sounds):
