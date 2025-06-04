@@ -1,4 +1,5 @@
 import mapper
+import system
 from stream import Stream
 import controller
 import os
@@ -90,7 +91,7 @@ def process(text):
     if can_be_key and controller.is_key(token):
       flush(buffer)
       last_hotkey = (modifiers.copy(), token)
-      controller.hotkey(modifiers, token)
+      hotkey(modifiers, token)
       modifiers.clear()
       continue
 
@@ -100,18 +101,34 @@ def process(text):
       modifiers.clear()
 
     buffer.append(part)
-  
+
   return flush(buffer)
 
-def flush(text):
+def flush(buffer):
   global last_char
-  # print('flush', text, 'last_char "', last_char, '"')
-  if not text:
+  if not buffer:
     return
+
+  text = ''.join(buffer)
+  if last_char == "." and not text[0].islower():
+    # Write the buffered dot
+    text = ". " + text
+    last_char = ' '
+
+  if last_char and not is_space(last_char) and not is_space(text[0]):
+    # Prepend a space in some cases
+    text = " " + text
+
+  last_char = text[-1]
+  if last_char == ".":
+    # Buffer the dot for the next pass
+    text = text[:-1]
 
   if system.args.stdout:
     print(text, end="")
   else:
+    controller.paste(text)
+  buffer.clear()
   return text
 
 def hotkey(modifiers, key):
