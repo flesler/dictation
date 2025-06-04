@@ -105,6 +105,10 @@ MAPPING = {
   "select line": "press home shift end",
   # "select word": "press shift left",
   "scratch it": "control z",
+  "go up": "press up",
+  "go down": "press down",
+  "go left": "press left",
+  "go right": "press right",
   # Multi-word hotkeys
   "double click": "click click",
   "right click": "rightclick",
