@@ -16,7 +16,6 @@ def suspend():
   is_running = False
 
 def repeat_hotkey():
-  global last_hotkey
   hotkey(*last_hotkey)
 
 def submit():
@@ -56,7 +55,7 @@ def process(text):
   while stream.has():
     part = stream.next()
     prev_token = token
-    token = ''.join(c for c in part.lower() if c.isalnum())
+    token = to_token(part)
 
     # print('part', part, 'token', token)
     if token in callbacks and (is_running or token == "resume"):
@@ -73,7 +72,7 @@ def process(text):
       continue
 
     if controller.is_modifier(token):
-      modifiers.append(token)
+      modifiers.append(part)
       continue
 
     # (repeat) X times
@@ -90,8 +89,10 @@ def process(text):
     can_be_key = controller.is_always_key(token) or modifiers or (not buffer and len(token) > 1)
     if can_be_key and controller.is_key(token):
       flush(buffer)
-      last_hotkey = (modifiers.copy(), token)
-      hotkey(modifiers, token)
+      # Keep the original modifiers until last minute in case it's a false alarm
+      mods = [to_token(m) for m in modifiers]
+      last_hotkey = (mods.copy(), token)
+      hotkey(mods, token)
       modifiers.clear()
       continue
 
@@ -133,9 +134,12 @@ def flush(buffer):
 
 def hotkey(modifiers, key):
   if system.args.stdout:
-    print("+".join(modifiers) + "+" + key, end=" ")
+    print(" " + "+".join(modifiers) + "+" + key, end=" ")
   else:
     controller.hotkey(modifiers, key)
 
 def is_space(char):
   return char == " " or char == "\n"
+
+def to_token(text):
+  return ''.join(c for c in text.lower() if c.isalnum())
