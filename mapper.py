@@ -1,6 +1,8 @@
 import re
 
 MAPPING = {
+  "... ": ".",
+  "...": ".",
   # Punctuation:
   "dot": ".",
   "period": ".",
@@ -116,27 +118,48 @@ MAPPING = {
   "volume mute": "volumemute",
   "mute": "volumemute",
   "ship it": "shipit",
+  "that's it": "thatisit",
+  "that is it": "thatisit",
   # Filler words to skip
-  "uh": "",
-  "er": "",
   "ah": "",
-  "huh": "",
+  "ahem": "",
+  "er": "",
+  "bbb": "",
+  "mm-mm": "",
+  "mmmmmmmm": "",
   "hm": "",
   "hmm": "",
+  # "huh": "",
+  "uh": "",
+  "uwu": "",
   "um": "",
+  "umm": "",
+  "yep": "",
+  "yup": "",
 }
 
-REGEX = re.compile(r"\b(" + "|".join(re.escape(k) for k in MAPPING) + r")\b", re.IGNORECASE)
-# print(REGEX.pattern)
+# Build regex for word-like keys
+WORD_REGEX = re.compile(
+  r"\b(" + "|".join(re.escape(k) for k in MAPPING if re.match(r'^[\w ]+$', k)) + r")\b",
+  re.IGNORECASE
+)
+# Build regex for non-word keys
+NONWORD_REGEX = re.compile(
+  "(" + "|".join(re.escape(k) for k in MAPPING if not re.match(r'^[\w ]+$', k)) + ")",
+  re.IGNORECASE
+)
+
+# print('WORD_REGEX', WORD_REGEX.pattern)
+# print('NONWORD_REGEX', NONWORD_REGEX.pattern)
 
 def map(text):
   prev = None
   while prev != text:
     prev = text
-    text = REGEX.sub(lambda x: map_word(x.group(1)), text)
-
+    text = WORD_REGEX.sub(lambda x: map_word(x.group(1)), text)
+    text = NONWORD_REGEX.sub(lambda x: map_word(x.group(1)), text)
   # Remove spaces before some chars
-  text = re.sub(r' +([\t\n ,.:])', r'\1', text)
+  text = re.sub(r' +([\t\n ,.:?!])', r'\1', text)
   # Remove spaces after some chars
   text = re.sub(r'([\n]) +', r'\1', text)
   # Remove spaces between contiguous numbers
@@ -153,5 +176,7 @@ def map_word(orig):
 
 # Convert "Hello! how are you?" -> ["Hello", "! ", "how", " ", "are", " ", "you", "?"]
 def tokenize(text):
+  # Match single punctuation ("comma", "period")
+  # |^[.,?!:-](?=[.,]?)$
   # This will match words or punctuation, possibly followed by spaces, commas, or periods
   return re.findall(r'\w+[ ,\.]*|[\n\t]|[^\w\s,\.]+[ ,\.]*', text)
