@@ -18,9 +18,14 @@ def repeat_hotkey():
   controller.hotkey(*last_hotkey)
 
 def submit():
-  controller.hotkey([], "enter")
-  time.sleep(0.05)
-  index.stop()
+  done()
+
+def done():
+  if system.args.wakeword:
+    recorder.recorder.wake_word_activation_delay = 0.1
+  else:
+    time.sleep(0.05)
+    index.stop()
 
 callbacks = {
   "click": controller.click,
@@ -31,6 +36,7 @@ callbacks = {
   "exit": lambda: index.stop(),
   "quit": lambda: index.stop(),
   "shipit": submit,
+  "thatisit": done,
 }
 
 is_running = True
@@ -39,7 +45,6 @@ last_char = None
 
 def process(text):
   global last_hotkey
-
   stream = Stream(mapper.map(text))
   buffer = []
   modifiers = []
