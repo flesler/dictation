@@ -4,10 +4,16 @@ import psutil
 import argparse
 import signal
 import subprocess
+from enum import Enum
 
 args = None
 
-def kill_another(sig = signal.SIGTERM):
+class Sounds(Enum):
+  BOOT = 'percussion-12'
+  START = 'prompt' # canary-long
+  STOP = 'percussion-28'
+  FATAL = 'cockchafer-gentleman-1'
+
   current_pid = os.getpid()
   script_name = 'index.py'
 
@@ -28,7 +34,10 @@ def kill_another(sig = signal.SIGTERM):
   return False
 
 def play(file):
-  subprocess.run(['paplay', f'/usr/share/sounds/sound-icons/{file}.wav'], stdout=subprocess.DEVNULL)
+  if isinstance(file, Sounds):
+    file = file.value
+  # Use Popen to avoid blocking the main thread
+  subprocess.Popen(['paplay', f'/usr/share/sounds/sound-icons/{file}.wav'], stdout=subprocess.DEVNULL)
 
 def on(sig, handler):
   signal.signal(sig, handler)

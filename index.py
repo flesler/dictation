@@ -14,18 +14,23 @@ def process(text):
   return text
 
 def start():
-  recorder.start()
-  # Ensure microphone is unmuted
-  microphone.start()
-  system.play('percussion-12')
+  try:
+    # Ensure microphone is unmuted
+    microphone.start()
+    recorder.start()
+  except Exception as e:
+    print(f"Error starting recorder: {e}")
+    system.play(Sounds.FATAL)
+    sys.exit(1)
+  system.play(Sounds.BOOT if system.args.wakeword else Sounds.START)
   util.time_end('Boot')
   recorder.monitor(process)
+  sys.exit(0)
 
 def stop(force = False):
   recorder.stop()
   microphone.stop()
-  snd = 'cockchafer-gentleman-1' if force else 'percussion-28'
-  system.play(snd)
+  system.play(Sounds.FATAL if force else Sounds.STOP)
   if force:
     sys.exit(0)
 
