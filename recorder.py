@@ -8,10 +8,17 @@ recorder = None
 
 def start():
   global recorder
+  args = system.args
+  lang = args.lang
+  size = args.size
   quant = args.quant
+  polish = args.polish
   wakeword = args.wakeword
   root = system.abs_path("./downloads")
+  print(f"Starting recorder with lang: {lang}, size: {size}, quant: {quant}, polish: {polish}, wakeword: {wakeword}")
   model = size
+  if lang == "en" and not '-' in model:
+    model = f"{model}.en"
   if quant and quant != 'none':
     model = f"{root}/{model}-{quant}"
   recorder = AudioToTextRecorder(
