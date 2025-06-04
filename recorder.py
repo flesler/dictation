@@ -2,12 +2,14 @@ from RealtimeSTT import AudioToTextRecorder
 import runner
 import microphone
 import system
+from system import Sounds
 
 recorder = None
 
 def start():
   global recorder
   quant = args.quant
+  wakeword = args.wakeword
   root = system.abs_path("./downloads")
   model = size
   if quant and quant != 'none':
@@ -16,6 +18,7 @@ def start():
     download_root=root,
     model=model,
     language=lang, # None is Auto
+    # device="cpu", # "cuda",
     compute_type="default", # "auto", # "int8_float16",
     input_device_index=microphone.get_device_index(),
     spinner=False, # Default True
@@ -30,13 +33,21 @@ def start():
     min_length_of_recording=0.01, # Default 1
     # This is key, flushes the buffer
     post_speech_silence_duration=0.2, # Default 0.2
-    wake_words=None,
     initial_prompt=prompt,
     initial_prompt_realtime=prompt,
     normalize_audio=True,
-    silero_sensitivity=0.8,
+    silero_sensitivity=0.2,
     silero_use_onnx=True,
     silero_deactivity_detection=True,
+    webrtc_sensitivity=3,
+    wake_words="jarvis" if wakeword else None,
+    wakeword_backend='pvporcupine' if wakeword else None,
+    wake_words_sensitivity=0.6,
+    wake_word_timeout=4,
+    # Must be 0 to auto-activate but then we need an actual timeout
+    wake_word_activation_delay=0,
+    on_wakeword_detected=_on_wakeword,
+    on_wakeword_timeout=_on_wakeword_timeout,
   )
 
 def stop():
@@ -62,6 +73,17 @@ def is_running():
 def text():
   # Just for testing
   return recorder.text()
+
+def _on_wakeword():
+  # FIXME: Seems like it might cut if processing or buffering takes too long, maybe set delay to 0 on on_vad_detect_start and restore on on_vad_detect_stop
+  # If not set, it ends after the first buffer, if set on start, starts recording immediately
+  recorder.wake_word_activation_delay = recorder.wake_word_timeout
+  system.play(Sounds.START)
+
+def _on_wakeword_timeout():
+  if recorder.wake_word_detect_time == 0:
+    # Patch a bug, it calls this twice per stop when nothing was said
+    system.play(Sounds.STOP)
 
 # Not an LLM prompt per se, it might help bias the model
 prompt = """You receive dictation that includes both regular text and spoken keyboard shortcuts or commands.
