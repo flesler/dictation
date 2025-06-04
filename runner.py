@@ -4,6 +4,7 @@ import controller
 import os
 import index
 import time
+import recorder
 
 def resume():
   global is_running
@@ -15,9 +16,10 @@ def suspend():
 
 def repeat_hotkey():
   global last_hotkey
-  controller.hotkey(*last_hotkey)
+  hotkey(*last_hotkey)
 
 def submit():
+  hotkey([], "enter")
   done()
 
 def done():
@@ -106,13 +108,17 @@ def flush(text):
   # print('flush', text, 'last_char "', last_char, '"')
   if not text:
     return
-  if last_char and not is_space(last_char) and not is_space(text[0][0]):
-    text.insert(0, " ")
-  last_char = text[-1][-1]
 
-  controller.paste(text)
-  text.clear()
+  if system.args.stdout:
+    print(text, end="")
+  else:
   return text
+
+def hotkey(modifiers, key):
+  if system.args.stdout:
+    print("+".join(modifiers) + "+" + key, end=" ")
+  else:
+    controller.hotkey(modifiers, key)
 
 def is_space(char):
   return char == " " or char == "\n"

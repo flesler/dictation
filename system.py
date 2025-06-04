@@ -56,4 +56,5 @@ def parse_args():
   parser.add_argument('--wakeword', action='store_true', help='If set, the activation word is required')
   parser.add_argument('--polish', action='store_true', help='If set, sentences get punctuation and title case')
   parser.add_argument('--single', action='store_true', help='If set, exits after one dictation')
+  parser.add_argument('--stdout', action='store_true', help='If set, prints dictation to stdout')
   args = parser.parse_args()
