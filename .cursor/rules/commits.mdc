@@ -1,0 +1,26 @@
+---
+description: Targets commit messages
+globs: /
+---
+# Rules
+- Start with an Action Verb: Use verbs like "Add", "Refactor", "Fix", "Implement", "Update", "Delete"
+- Be very specific: Describe just the main change or feature in no more than 15-20 words
+- No blob after with the changes, always a single sentence
+- Don't make it unnecessarily fancy, we don't need to impress anyone, we are smart and we know it
+- Don't end with a period
+- Don't explain why it's done, just what's done
+- If the git changes include a "// DONTCOMMIT" comment, make the commit message "DONTCOMMIT"
+
+# Examples
+- Add payment field to PaymentReconciliation type and resolvers
+- Disable syncing of payment reconciliations to QBO
+- Change the SQL in dailyMerchant for reducing COGs for daily finance fee, to avoid 1-to-many JOINs
+- Stop ignoring FBO Cash Advances in Customer Balance
+- Add Cash Advance fields to OrganizationStatDaily type in GraphQL schema
+- Refactor Sentry error handling in GraphQL plugin to log only the first error per request
+- Create fake Estimates for Cash Advance line items/invoices in dailyMerchant to simplify the math
+- Remove George from the MFD org and as a superadmin
+- Move "Subscription" to "Other" as a line item type classification
+- In reconcilePayment, match negative children of given invoices too, process them right before their parent
+- Trim the GQL error list to always have at most one
+- Optimize ledger transaction query with parallel account fetching
