@@ -30,7 +30,7 @@ def stop(force = False):
     sys.exit(0)
 
 if __name__ == '__main__':
-  util.time_start()
+  util.time_start('Boot')
   system.parse_args()
   if system.kill_another(signal.SIGTERM):
     sys.exit(0)

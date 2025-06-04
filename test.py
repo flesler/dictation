@@ -5,20 +5,26 @@ import recorder
 import system
 import util
 
-# time.sleep(1)
-# runner.process("Hello! how are you? Control a Ctrl C Ok exit")
-
-# print(mapper.map("Hello! Enter How are you? Tab Ok"))
-
 system.parse_args()
-util.time_start()
-recorder.start()
-util.time_end()
-print(recorder.text())
-recorder.stop()
+system.args.stdout = True
 
-util.time_start()
-recorder.start()
-util.time_end()
-print(recorder.text())
-recorder.stop()
+runner.process("Hello! How...")
+runner.process("are.")
+runner.process("you.")
+runner.process("You good?")
+runner.process("I hope well!")
+
+# print(mapper.map("Hello! Enter How... are you? Tab Ok"))
+
+# system.parse_args()
+# util.time_start()
+# recorder.start()
+# util.time_end()
+# print(recorder.text())
+# recorder.stop()
+
+# util.time_start()
+# recorder.start()
+# util.time_end()
+# print(recorder.text())
+# recorder.stop()
