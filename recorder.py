@@ -3,6 +3,8 @@ import runner
 import microphone
 import system
 from system import Sounds
+import tray
+from tray import Colors
 
 recorder = None
 
@@ -49,7 +51,7 @@ def start():
     webrtc_sensitivity=3,
     wake_words="jarvis" if wakeword else None,
     wakeword_backend='pvporcupine' if wakeword else None,
-    wake_words_sensitivity=0.6,
+    wake_words_sensitivity=0.8,
     wake_word_timeout=4,
     # Must be 0 to auto-activate but then we need an actual timeout
     wake_word_activation_delay=0,
@@ -86,11 +88,13 @@ def _on_wakeword():
   # If not set, it ends after the first buffer, if set on start, starts recording immediately
   recorder.wake_word_activation_delay = recorder.wake_word_timeout
   system.play(Sounds.START)
+  tray.set(Colors.ACTIVE)
 
 def _on_wakeword_timeout():
   if recorder.wake_word_detect_time == 0:
     # Patch a bug, it calls this twice per stop when nothing was said
     system.play(Sounds.STOP)
+    tray.set(Colors.INACTIVE)
 
 # Not an LLM prompt per se, it might help bias the model
 prompt = """You receive dictation that includes both regular text and spoken keyboard shortcuts or commands.

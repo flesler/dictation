@@ -5,3 +5,5 @@ pyaudio
 psutil
 argparse
 RealtimeSTT
+pystray
+python-xlib

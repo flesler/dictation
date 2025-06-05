@@ -3,6 +3,8 @@ import recorder
 import system
 from system import Sounds
 import microphone
+import tray
+from tray import Colors
 import os
 import sys
 import signal
@@ -25,6 +27,8 @@ def start():
     sys.exit(1)
   system.play(Sounds.BOOT if system.args.wakeword else Sounds.START)
   util.time_end('Boot')
+  if not system.args.wakeword:
+    tray.set(Colors.ACTIVE)
   recorder.monitor(process)
   sys.exit(0)
 
@@ -41,4 +45,6 @@ if __name__ == '__main__':
   if system.kill_another(signal.SIGTERM):
     sys.exit(0)
   system.on(signal.SIGTERM, lambda signum, frame: stop(True))
+  if system.args.tray:
+    tray.setup(Colors.INACTIVE)
   start()
