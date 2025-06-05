@@ -51,7 +51,9 @@ def reset():
 
 def process(text):
   global last_hotkey
-  stream = Stream(mapper.map(text))
+  orig = text
+  text = mapper.map(text)
+  stream = Stream(text)
   buffer = []
   modifiers = []
   token = None

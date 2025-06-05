@@ -163,7 +163,7 @@ def map(text):
     text = WORD_REGEX.sub(lambda x: map_word(x.group(1)), text)
     text = NONWORD_REGEX.sub(lambda x: map_word(x.group(1)), text)
   # Remove spaces before some chars
-  text = re.sub(r' +([\t\n ,.:?!])', r'\1', text)
+  text = re.sub(r' +([\t\n ,.:;?!])', r'\1', text)
   # Remove spaces after some chars
   text = re.sub(r'([\n]) +', r'\1', text)
   # Remove spaces between contiguous numbers
@@ -183,4 +183,4 @@ def tokenize(text):
   # Match single punctuation ("comma", "period")
   # |^[.,?!:-](?=[.,]?)$
   # This will match words or punctuation, possibly followed by spaces, commas, or periods
-  return re.findall(r'\w+[ ,\.]*|[\n\t]|[^\w\s,\.]+[ ,\.]*', text)
+  return re.findall(r'\w+[ ,.:;?!]*|[\n\t]|[^\w\s,\.]+[ ,\.]*', text)
