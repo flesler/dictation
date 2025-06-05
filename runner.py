@@ -45,6 +45,10 @@ is_running = True
 last_hotkey = None
 last_char = None
 
+def reset():
+  global last_char
+  last_char = None
+
 def process(text):
   global last_hotkey
   stream = Stream(mapper.map(text))

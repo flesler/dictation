@@ -87,6 +87,7 @@ def _on_wakeword():
   # FIXME: Seems like it might cut if processing or buffering takes too long, maybe set delay to 0 on on_vad_detect_start and restore on on_vad_detect_stop
   # If not set, it ends after the first buffer, if set on start, starts recording immediately
   recorder.wake_word_activation_delay = recorder.wake_word_timeout
+  runner.reset()
   system.play(Sounds.START)
   tray.set(Colors.ACTIVE)
 
