@@ -24,6 +24,7 @@ def start():
     model = f"{model}.en"
   if quant and quant != 'none':
     model = f"{root}/{model}-{quant}"
+  initial_prompt = prompt if lang == 'en' else None
   recorder = AudioToTextRecorder(
     download_root=root,
     model=model,
