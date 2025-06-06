@@ -10,6 +10,7 @@ recorder = None
 
 def start():
   global recorder
+  device_index = microphone.get_device_index()
   args = system.args
   lang = args.lang
   size = args.size
@@ -29,7 +30,7 @@ def start():
     language=lang, # None is Auto
     # device="cpu", # "cuda",
     compute_type="default", # "auto", # "int8_float16",
-    input_device_index=microphone.get_device_index(),
+    input_device_index=device_index,
     spinner=False, # Default True
     no_log_file=True,
     ensure_sentence_starting_uppercase=polish,

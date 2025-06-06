@@ -2,6 +2,8 @@
 import sounddevice
 import pyaudio
 import subprocess
+import sys
+import system
 
 code = 'numid=7'
 
@@ -19,35 +21,33 @@ def is_muted():
   flag = result.stdout.split('=')[-1].strip()
   return flag == 'off'
 
-def get_device_index(verbose=False):
+def get_devices():
   p = pyaudio.PyAudio()
   try:
     devices = []
-    has_headset = False
     for i in range(p.get_device_count()):
       info = p.get_device_info_by_index(i)
-      name = info['name'].lower()
+      name = info['name']
       is_input = info['maxInputChannels'] > 0
       if is_input:
-        if verbose:
-          print(f'{i} is {name}, maxInputChannels: {info["maxInputChannels"]}')
         devices.append((i, name))
-      if 'usb audio device' in name:
-        has_headset = True
-
-    if has_headset:
-      for device in devices:
-        # usb audio device is the mic yet fails if chosen, pulse works
-        if 'pulse' in device[1]:
-          return device[0]
-
-    for device in devices:
-      if 'sysdefault' in device[1]:
-        return device[0]
-    return None
+    return devices
   finally:
     p.terminate()
 
-if __name__ == "__main__":
-  index = get_device_index(verbose=True)
-  print(f"Selected device index: {index}")
+def get_device_index():
+  devices = get_devices()
+  mic_name = system.args.microphone
+  
+  # Try to find device with the specified name
+  for index, device_name in devices:
+    if mic_name.lower() in device_name.lower():
+      return index
+  
+  # If not found, print available devices and exit
+  print("Available microphone devices:")
+  for index, device_name in devices:
+    print(f"  {index}: {device_name}")
+  print(f"\nMicrophone '{mic_name}' not found.")
+  print("Use --microphone <name> to specify a different device.")
+  sys.exit(1)
