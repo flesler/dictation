@@ -67,7 +67,6 @@ def parse_args():
     choices=['none', 'int8', 'int16', 'float16', 'float32'])
   parser.add_argument('--microphone', type=str, default='pulse', help='Microphone device name')
   parser.add_argument('--wakeword', action='store_true', help='If set, the activation word is required')
-  parser.add_argument('--polish', action='store_true', help='If set, sentences get punctuation and title case')
   parser.add_argument('--single', action='store_true', help='If set, exits after one dictation')
   parser.add_argument('--stdout', action='store_true', help='If set, prints dictation to stdout')
   parser.add_argument('--tray', action='store_true', help='If set, shows a tray icon')

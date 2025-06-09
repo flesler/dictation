@@ -15,10 +15,9 @@ def start():
   lang = args.lang
   size = args.size
   quant = args.quant
-  polish = args.polish
   wakeword = args.wakeword
   root = system.abs_path("./downloads")
-  print(f"Starting recorder with lang: {lang}, size: {size}, quant: {quant}, polish: {polish}, wakeword: {wakeword}")
+  print(f"Starting recorder with lang: {lang}, size: {size}, quant: {quant}, wakeword: {wakeword}")
   model = size
   if lang == "en" and not '-' in model:
     model = f"{model}.en"
@@ -34,8 +33,6 @@ def start():
     input_device_index=device_index,
     spinner=False, # Default True
     no_log_file=True,
-    ensure_sentence_starting_uppercase=polish,
-    ensure_sentence_ends_with_period=polish,
     start_callback_in_new_thread=True,
     enable_realtime_transcription=False, # False, # Default
     realtime_processing_pause=0.01, # Default 0.2
@@ -55,7 +52,7 @@ def start():
     wakeword_backend='pvporcupine' if wakeword else None,
     wake_words_sensitivity=0.8,
     wake_word_timeout=4,
-    wake_word_buffer_duration=0.5, # Default 0.1
+    wake_word_buffer_duration=0.1, # Default 0.1
     # Must be 0 to auto-activate but then we need an actual timeout
     wake_word_activation_delay=0,
     on_wakeword_detected=_on_wakeword,
