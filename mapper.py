@@ -124,6 +124,12 @@ MAPPING = {
   "ship it": "shipit",
   "that's it": "thatisit",
   "that is it": "thatisit",
+  "over and out": "thatisit",
+  # Other
+  "kali": "Khali",
+  "cali": "Khali",
+  "kylie": "Khali",
+  "pampa": "Pampa",
   # Filler words to skip
   "ah": "",
   "ahem": "",

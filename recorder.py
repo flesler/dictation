@@ -39,15 +39,15 @@ def start():
     start_callback_in_new_thread=True,
     enable_realtime_transcription=False, # False, # Default
     realtime_processing_pause=0.01, # Default 0.2
-    use_main_model_for_realtime=True, # Change
+    use_main_model_for_realtime=True, # Changed
     min_gap_between_recordings=0.01, # Default 1
     min_length_of_recording=0.01, # Default 1
     # This is key, flushes the buffer
-    post_speech_silence_duration=0.2, # Default 0.2
+    post_speech_silence_duration=0.5, # Default 0.2
     initial_prompt=prompt,
     initial_prompt_realtime=prompt,
     normalize_audio=True,
-    silero_sensitivity=0.2,
+    silero_sensitivity=0.4,
     silero_use_onnx=True,
     silero_deactivity_detection=True,
     webrtc_sensitivity=3,
@@ -55,6 +55,7 @@ def start():
     wakeword_backend='pvporcupine' if wakeword else None,
     wake_words_sensitivity=0.8,
     wake_word_timeout=4,
+    wake_word_buffer_duration=0.5, # Default 0.1
     # Must be 0 to auto-activate but then we need an actual timeout
     wake_word_activation_delay=0,
     on_wakeword_detected=_on_wakeword,
@@ -94,7 +95,8 @@ def _on_wakeword():
   tray.set(Colors.ACTIVE)
 
 def _on_wakeword_timeout():
-  if recorder.wake_word_detect_time == 0:
+  if recorder.wake_word_activation_delay:
+    recorder.wake_word_activation_delay = 0
     # Patch a bug, it calls this twice per stop when nothing was said
     system.play(Sounds.STOP)
     tray.set(Colors.INACTIVE)
