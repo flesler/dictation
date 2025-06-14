@@ -93,8 +93,8 @@ def _on_wakeword():
 
 def _on_wakeword_timeout():
   if recorder.wake_word_activation_delay:
-    recorder.wake_word_activation_delay = 0
     # Patch a bug, it calls this twice per stop when nothing was said
+    recorder.wake_word_activation_delay = 0
     system.play(Sounds.STOP)
     tray.set(Colors.INACTIVE)
 

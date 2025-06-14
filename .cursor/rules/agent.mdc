@@ -1,0 +1,19 @@
+---
+description: Read once when starting the session
+globs: 
+alwaysApply: false
+---
+# Boot
+
+The moment you start your shell, run this (as a single command):
+```bash
+unset HISTFILE;
+export NVM_DIR="$HOME/.nvm";
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh";
+command -v nvm >/dev/null 2>&1 && nvm use;
+PS1=${PS1/\\n\$/🤖\\n\$};
+export GIT_PAGER="";
+export PAGER="cat";
+export EDITOR="nano";
+```
+If you notice the shell stops having the 🤖, it means you need to run this again.
