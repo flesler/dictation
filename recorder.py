@@ -34,15 +34,11 @@ def start():
     spinner=False, # Default True
     no_log_file=True,
     start_callback_in_new_thread=True,
-    enable_realtime_transcription=False, # False, # Default
-    realtime_processing_pause=0.01, # Default 0.2
-    use_main_model_for_realtime=True, # Changed
     min_gap_between_recordings=0.01, # Default 1
     min_length_of_recording=0.01, # Default 1
     # This is key, flushes the buffer
     post_speech_silence_duration=0.5, # Default 0.2
     initial_prompt=prompt,
-    initial_prompt_realtime=prompt,
     normalize_audio=True,
     silero_sensitivity=0.4,
     silero_use_onnx=True,
