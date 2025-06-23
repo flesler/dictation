@@ -10,6 +10,9 @@ import sys
 import signal
 import util
 
+# Needed to detect OOM errors, they happen on a thread
+start_timeout = 3
+
 def process(text):
   text = runner.process(text)
   if system.args.single:
@@ -20,10 +23,13 @@ def on_signal(name):
   fatal(f"Received signal {name}")
 
 def start():
+  signal.alarm(start_timeout)
   try:
     # Ensure microphone is unmuted
     microphone.start()
     recorder.start()
+    # Cancel alarm if successful
+    signal.alarm(0)
   except Exception as e:
     fatal(e)
   
@@ -55,7 +61,7 @@ if __name__ == '__main__':
 
   system.parse_args()
 
-  system.on(signal.SIGTERM, lambda signum, frame: stop(True))
+  system.on(signal.SIGALRM, on_signal)
   system.on(signal.SIGINT, on_signal)
   system.on(signal.SIGTERM, on_signal)
 
