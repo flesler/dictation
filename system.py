@@ -52,7 +52,7 @@ def play(file):
   subprocess.Popen(['paplay', f'/usr/share/sounds/sound-icons/{file}.wav'], stdout=subprocess.DEVNULL)
 
 def on(sig, handler):
-  signal.signal(sig, handler)
+  signal.signal(sig, lambda signum, frame: handler(signal.Signals(signum).name))
 
 def abs_path(path):
   return os.path.abspath(path)

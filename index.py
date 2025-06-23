@@ -16,15 +16,17 @@ def process(text):
     stop()
   return text
 
+def on_signal(name):
+  fatal(f"Received signal {name}")
+
 def start():
   try:
     # Ensure microphone is unmuted
     microphone.start()
     recorder.start()
   except Exception as e:
-    print(f"Error starting recorder: {e}")
-    system.play(Sounds.FATAL)
-    sys.exit(1)
+    fatal(e)
+  
   system.play(Sounds.BOOT if system.args.wakeword else Sounds.START)
   util.time_end('Boot')
   if not system.args.wakeword:
@@ -32,19 +34,31 @@ def start():
   recorder.monitor(process)
   sys.exit(0)
 
+def fatal(message):
+  print(f"FATAL: {message}")
+  stop(True)
+
 def stop(force = False):
-  recorder.stop()
   microphone.stop()
+  try:
+    recorder.stop()
+  except Exception as e:
+    pass
   system.play(Sounds.FATAL if force else Sounds.STOP)
   if force:
     sys.exit(0)
 
 if __name__ == '__main__':
   util.time_start('Boot')
-  system.parse_args()
   if system.kill_another(signal.SIGTERM):
     sys.exit(0)
+
+  system.parse_args()
+
   system.on(signal.SIGTERM, lambda signum, frame: stop(True))
+  system.on(signal.SIGINT, on_signal)
+  system.on(signal.SIGTERM, on_signal)
+
   if system.args.tray:
     tray.setup(Colors.INACTIVE)
   start()
