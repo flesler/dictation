@@ -34,13 +34,11 @@ def kill_another(sig=signal.SIGTERM, attempts=3):
         print(f"Sending SIGTERM to another process (pid={pid}).")
         for _ in range(attempts):
           proc.send_signal(sig)
-          time.sleep(0.3)
-          if not proc.is_running():
-            break
-          time.sleep(0.8)
-        if proc.is_running():
-          print(f"Process (pid={pid}) did not exit, sending SIGKILL.")
-          proc.send_signal(signal.SIGKILL)
+          time.sleep(1.2)
+          if proc.is_running():
+            print(f"Process (pid={pid}) did not exit, sending SIGKILL.")
+            proc.send_signal(signal.SIGKILL)
+          break
     except (psutil.NoSuchProcess, psutil.AccessDenied):
       continue
   return killed
@@ -73,8 +71,5 @@ def parse_args():
   args = parser.parse_args()
   
   if args.size == 'auto':
-    # Wakeword doesn't restart all the time, non-en needs multi-lingual
-    if args.lang != 'en' or args.wakeword:
-      args.size = 'large-v3-turbo'
-    else:
-      args.size = 'small'
+    # Used to only use this for wakeword and non-en, but now we use it for all
+    args.size = 'large-v3-turbo'

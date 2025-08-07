@@ -14,4 +14,4 @@ fi
 root=$(dirname $0)/downloads
 mkdir -p $root
 
-ct2-transformers-converter --model openai/whisper-${model} --output_dir $root/${model}-${quant} --copy_files tokenizer.json preprocessor_config.json --quantization ${quant}
+ct2-transformers-converter --model openai/whisper-${model} --output_dir $root/${model}-${quant} --copy_files tokenizer.json preprocessor_config.json --quantization ${quant} --force
