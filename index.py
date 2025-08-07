@@ -9,6 +9,7 @@ import os
 import sys
 import signal
 import util
+import time
 
 # Needed to detect OOM errors, they happen on a thread
 start_timeout = 3
@@ -20,7 +21,18 @@ def process(text):
   return text
 
 def on_signal(name):
-  fatal(f"Received signal {name}")
+  if name != "SIGTERM" or not system.args.buffer:
+    return fatal(f"Received signal {name}")
+
+  # In buffer mode, SIGTERM triggers flush instead of exit
+  print(f"Received {name}, flushing buffer...")
+  # Stop recording to force processing of buffered audio
+  text = recorder.flush()
+  if text:
+    process(text)
+    # Give time for processing, then exit gracefully
+    time.sleep(1)
+  stop()
 
 def start():
   signal.alarm(start_timeout)

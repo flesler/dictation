@@ -17,7 +17,7 @@ def start():
   quant = args.quant
   wakeword = args.wakeword
   root = system.abs_path("./downloads")
-  print(f"Starting recorder with lang: {lang}, size: {size}, quant: {quant}, wakeword: {wakeword}")
+  print(f"Starting recorder with lang: {lang}, size: {size}, quant: {quant}, wakeword: {wakeword}, buffer: {args.buffer}")
   model = size
   if lang == "en" and not '-' in model:
     model = f"{model}.en"
@@ -36,8 +36,8 @@ def start():
     start_callback_in_new_thread=True,
     min_gap_between_recordings=0.01, # Default 1
     min_length_of_recording=0.01, # Default 1
-    # This is key, flushes the buffer
-    post_speech_silence_duration=0.5, # Default 0.2
+    # This is key, flushes the buffer. In buffer mode, use very long delay
+    post_speech_silence_duration=9999 if args.buffer else 0.5, # Default 0.2
     initial_prompt=prompt,
     normalize_audio=True,
     silero_sensitivity=0.4,
@@ -77,6 +77,12 @@ def is_running():
 
 def text():
   # Just for testing
+  return recorder.text()
+
+def flush():
+  global recorder
+  # Stop recording to force processing of buffered audio
+  recorder.stop()
   return recorder.text()
 
 def _on_wakeword():

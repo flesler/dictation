@@ -34,7 +34,8 @@ def kill_another(sig=signal.SIGTERM, attempts=3):
         print(f"Sending SIGTERM to another process (pid={pid}).")
         for _ in range(attempts):
           proc.send_signal(sig)
-          time.sleep(1.2)
+          # Longer delay to allow buffer processing in --buffer mode
+          time.sleep(2.5)
           if proc.is_running():
             print(f"Process (pid={pid}) did not exit, sending SIGKILL.")
             proc.send_signal(signal.SIGKILL)
@@ -68,6 +69,7 @@ def parse_args():
   parser.add_argument('--single', action='store_true', help='If set, exits after one dictation')
   parser.add_argument('--stdout', action='store_true', help='If set, prints dictation to stdout')
   parser.add_argument('--tray', action='store_true', help='If set, shows a tray icon')
+  parser.add_argument('--buffer', action='store_true', help='If set, buffers dictation until SIGTERM (push-to-talk mode)')
   args = parser.parse_args()
   
   if args.size == 'auto':
