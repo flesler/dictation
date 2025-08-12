@@ -1,11 +1,11 @@
-import mapper
-import system
-from stream import Stream
-import controller
+from . import mapper
+from . import system
+from .stream import Stream
+from . import controller
 import os
-import index
+from . import cli
 import time
-import recorder
+from . import recorder
 
 def resume():
   global is_running

@@ -1,10 +1,10 @@
 from RealtimeSTT import AudioToTextRecorder
-import runner
-import microphone
-import system
-from system import Sounds
-import tray
-from tray import Colors
+from . import runner
+from . import microphone
+from . import system
+from .system import Sounds
+from . import tray
+from .tray import Colors
 
 recorder = None
 

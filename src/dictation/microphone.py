@@ -3,7 +3,7 @@ import sounddevice
 import pyaudio
 import subprocess
 import sys
-import system
+from . import system
 
 code = 'numid=7'
 

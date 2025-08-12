@@ -1,14 +1,14 @@
-import runner
-import recorder
-import system
-from system import Sounds
-import microphone
-import tray
-from tray import Colors
+from . import runner
+from . import recorder
+from . import system
+from .system import Sounds
+from . import microphone
+from . import tray
+from .tray import Colors
 import os
 import sys
 import signal
-import util
+from . import util
 import time
 
 # Needed to detect OOM errors, they happen on a thread
@@ -66,17 +66,3 @@ def stop(force = False):
   if force:
     sys.exit(0)
 
-if __name__ == '__main__':
-  util.time_start('Boot')
-  if system.kill_another(signal.SIGTERM):
-    sys.exit(0)
-
-  system.parse_args()
-
-  system.on(signal.SIGALRM, on_signal)
-  system.on(signal.SIGINT, on_signal)
-  system.on(signal.SIGTERM, on_signal)
-
-  if system.args.tray:
-    tray.setup(Colors.INACTIVE)
-  start()
