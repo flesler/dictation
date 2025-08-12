@@ -70,6 +70,7 @@ def parse_args():
   parser.add_argument('--stdout', action='store_true', help='If set, prints dictation to stdout')
   parser.add_argument('--tray', action='store_true', help='If set, shows a tray icon')
   parser.add_argument('--buffer', action='store_true', help='If set, buffers dictation until SIGTERM (push-to-talk mode)')
+  parser.add_argument('--literal', action='store_true', help='Disable mappings and shortcuts; output raw text')
   args = parser.parse_args()
   
   if args.size == 'auto':

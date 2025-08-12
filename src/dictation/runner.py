@@ -27,7 +27,7 @@ def done():
     recorder.recorder.wake_word_activation_delay = 0.1
   else:
     time.sleep(0.05)
-    index.stop()
+    cli.stop()
 
 callbacks = {
   "click": controller.click,
@@ -35,8 +35,8 @@ callbacks = {
   "suspend": suspend,
   "resume": resume,
   "repeat": repeat_hotkey,
-  "exit": lambda: index.stop(),
-  "quit": lambda: index.stop(),
+  "exit": lambda: cli.stop(),
+  "quit": lambda: cli.stop(),
   "shipit": submit,
   "thatisit": done,
 }
@@ -51,6 +51,8 @@ def reset():
 
 def process(text):
   global last_hotkey
+  if system.args.literal:
+    return flush([text])
   orig = text
   text = mapper.map(text)
   stream = Stream(text)
