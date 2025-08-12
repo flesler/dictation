@@ -10,9 +10,13 @@ def type(text):
 # Use paste instead of typing, works with tildes and ctrl-z undoes all
 def paste(text):
   text = tostr(text)
-  if text:
-    pyperclip.copy(text)
-    pyautogui.hotkey('ctrl', 'v')
+  if not text:
+    return
+  prev = pyperclip.paste()
+  pyperclip.copy(text)
+  pyautogui.hotkey('ctrl', 'v')
+  if prev:
+    pyperclip.copy(prev)
 
 def is_modifier(key):
   return key in modifier_keys

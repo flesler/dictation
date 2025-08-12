@@ -129,6 +129,9 @@ MAPPING = {
   "that's it": "thatisit",
   "that is it": "thatisit",
   "over and out": "thatisit",
+  # For code
+  "open code": "```\n",
+  "close code": "\n```",
   # Other
   "kali": "Khali",
   "cali": "Khali",
