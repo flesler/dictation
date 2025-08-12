@@ -17,7 +17,7 @@ class Sounds(Enum):
 
 def kill_another(sig=signal.SIGTERM, attempts=3):
   current_pid = os.getpid()
-  script_name = 'index.py'
+  script_name = 'dictation'
   killed = False
 
   for proc in psutil.process_iter(['pid', 'name', 'cmdline']):
