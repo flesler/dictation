@@ -14,7 +14,9 @@ def paste(text):
     return
   prev = pyperclip.paste()
   pyperclip.copy(text)
+  time.sleep(0.05)
   pyautogui.hotkey('ctrl', 'v')
+  time.sleep(0.05)
   if prev:
     pyperclip.copy(prev)
 
