@@ -8,6 +8,9 @@ from .tray import Colors
 
 recorder = None
 
+# To prevent silent accidental recordings, we limit the max buffering duration
+max_buffer_duration = 120
+
 def start():
   global recorder
   device_index = microphone.get_device_index()
@@ -36,8 +39,7 @@ def start():
     start_callback_in_new_thread=True,
     min_gap_between_recordings=0.01, # Default 1
     min_length_of_recording=0.01, # Default 1
-    # This is key, flushes the buffer. In buffer mode, use very long delay
-    post_speech_silence_duration=9999 if args.buffer else 0.5, # Default 0.2
+    post_speech_silence_duration=max_buffer_duration if args.buffer else 0.5, # Default 0.2
     initial_prompt=prompt,
     normalize_audio=True,
     silero_sensitivity=0.4,
