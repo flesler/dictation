@@ -8,8 +8,8 @@ from .tray import Colors
 
 recorder = None
 
-# To prevent silent accidental recordings, we limit the max buffering duration
-max_buffer_duration = 120
+# To prevent silent accidental recordings, we limit the max buffering duration (5 minutes)
+max_buffer_duration = 60 * 5
 
 def start():
   global recorder
