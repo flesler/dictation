@@ -60,8 +60,7 @@ def parse_args():
   global args
   parser = argparse.ArgumentParser(description="Start the voice recorder")
   parser.add_argument('--lang', type=str, default='en', choices=['en', 'es'], help='Language code')
-  parser.add_argument('--size', type=str, default='auto', help='Model size',
-    choices=['auto', 'tiny', 'base', 'small', 'medium', 'large-v3', 'large-v3-turbo'])
+  parser.add_argument('--size', type=str, default='auto', help='Model size (or HuggingFace model name like distil-whisper/distil-small.en)')
   parser.add_argument('--quant', type=str, default='int8', help='quant type',
     choices=['none', 'int8', 'int16', 'float16', 'float32'])
   parser.add_argument('--microphone', type=str, default='pulse', help='Microphone device name')

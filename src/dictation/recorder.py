@@ -22,10 +22,17 @@ def start():
   root = system.abs_path("./downloads")
   print(f"Starting recorder with lang: {lang}, size: {size}, quant: {quant}, wakeword: {wakeword}, buffer: {args.buffer}")
   model = size
-  if lang == "en" and not '-' in model:
+  # Skip auto-append .en for HuggingFace model paths (contain '/') or models with '-' (already have suffix)
+  if lang == "en" and not '-' in model and '/' not in model:
     model = f"{model}.en"
   if quant and quant != 'none':
-    model = f"{root}/{model}-{quant}"
+    # For quantized models, expect local converted model in downloads/
+    # If it's a HuggingFace path, extract just the model name (e.g., distil-whisper/distil-small.en -> distil-small.en)
+    if '/' in model:
+      model_name = model.split('/')[-1]
+      model = f"{root}/{model_name}-{quant}"
+    else:
+      model = f"{root}/{model}-{quant}"
   initial_prompt = prompt if lang == 'en' else None
   recorder = AudioToTextRecorder(
     download_root=root,

@@ -34,9 +34,21 @@ if [[ ! -x "$CONVERTER" ]]; then
   CONVERTER=ct2-transformers-converter
 fi
 
+# Support both openai/whisper-* and distil-whisper/* models
+if [[ "$model" == distil-whisper/* ]]; then
+  # Already a full HuggingFace path
+  model_path="$model"
+  # Extract model name for output dir (e.g., distil-whisper/distil-small.en -> distil-small.en)
+  model_name=$(basename "$model")
+else
+  # Standard openai/whisper-* format
+  model_path="openai/whisper-${model}"
+  model_name="$model"
+fi
+
 exec "$CONVERTER" \
-  --model "openai/whisper-${model}" \
-  --output_dir "${root}/${model}-${quant}" \
+  --model "$model_path" \
+  --output_dir "${root}/${model_name}-${quant}" \
   --copy_files tokenizer.json preprocessor_config.json \
   --quantization "${quant}" \
   --force
